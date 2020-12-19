@@ -10,8 +10,8 @@ __author__ = 'lapwingg'
 
 def main():
     py_app = QApplication([])
-    view = MainWindow()
-    view.show()
+    view = MainWindow(resolution=QApplication.desktop().availableGeometry())
+    view.show_()
     sys.exit(py_app.exec_())
 
 
