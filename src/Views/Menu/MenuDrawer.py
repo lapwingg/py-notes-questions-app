@@ -1,13 +1,31 @@
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QSizePolicy
-import PyQt5.QtCore as QtCore
+from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout, QListView, QAbstractItemView, QLabel
+from PyQt5.QtCore import Qt
 
 
 class MenuDrawer(QWidget):
-    def __init__(self):
+    def __init__(self, model):
         super().__init__()
-        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-        self.setStyleSheet("background-color: black;")
+        self.__setup_general_style()
+        self.__setup_list_view(model)
+
+    def __setup_general_style(self):
+        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setStyleSheet("background-color: white;")
         policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        policy.setHorizontalStretch(1)
+        policy.setHorizontalStretch(2)
         self.setSizePolicy(policy)
+
+    def __setup_list_view(self, model):
+        box = QVBoxLayout(self)
+        self.__setup_list_view_header(box)
+        self.__setup_list_view_content(box, model)
+
+    def __setup_list_view_header(self, layout):
+        label = QLabel(text="Options")
+        layout.addWidget(label)
+
+    def __setup_list_view_content(self, layout, model):
+        list_view = QListView()
+        list_view.setModel(model)
+        list_view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        layout.addWidget(list_view)

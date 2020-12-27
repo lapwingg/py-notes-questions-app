@@ -1,10 +1,9 @@
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QHBoxLayout
-import PyQt5.QtCore as QtCore
+from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PyQt5.QtCore import Qt
 
 from src.Views.Menu.MenuDrawer import MenuDrawer
 from src.Views.Presentation.PresentationArea import PresentationArea
+from src.Views.Menu.MenuDrawerModel import MenuDrawerModel
 
 app_title = 'Py Notes / Questions App'
 min_width = 100
@@ -20,7 +19,7 @@ class MainWindow(QMainWindow):
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
-        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+        self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color: rgba(0, 41, 59, 255)")
         self.show_(resolution=resolution)
 
@@ -40,7 +39,8 @@ class MainWindow(QMainWindow):
     @staticmethod
     def __setup_general_layout():
         layout = QHBoxLayout()
-        menu_drawer = MenuDrawer()
+        model = MenuDrawerModel.model()
+        menu_drawer = MenuDrawer(model)
         layout.addWidget(menu_drawer)
         presentation_area = PresentationArea()
         layout.addWidget(presentation_area)
