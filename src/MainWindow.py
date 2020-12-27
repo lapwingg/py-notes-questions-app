@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from PyQt5.QtCore import Qt
 
-from src.Views.Menu.MenuDrawer import MenuDrawer
-from src.Views.Presentation.PresentationArea import PresentationArea
-from src.Views.Menu.MenuDrawerModel import MenuDrawerModel
+from src.Menu.MenuDrawer import MenuDrawer
+from src.Presentation.PresentationArea import PresentationArea
+from src.Menu.MenuDrawerModel import MenuDrawerModel
 
 app_title = 'Py Notes / Questions App'
 min_width = 100
@@ -36,12 +36,15 @@ class MainWindow(QMainWindow):
             self.setMinimumWidth(min_width)
             self.setMinimumHeight(min_height)
 
-    @staticmethod
-    def __setup_general_layout():
+    def __setup_general_layout(self):
         layout = QHBoxLayout()
         model = MenuDrawerModel.model()
-        menu_drawer = MenuDrawer(model)
-        layout.addWidget(menu_drawer)
-        presentation_area = PresentationArea()
-        layout.addWidget(presentation_area)
+        self.menu_drawer = MenuDrawer(model)
+        self.menu_drawer.index_selected.connect(self.present_view_for_index_selected)
+        layout.addWidget(self.menu_drawer)
+        self.presentation_area = PresentationArea()
+        layout.addWidget(self.presentation_area)
         return layout
+
+    def present_view_for_index_selected(self, index):
+        self.presentation_area.change_widget(MenuDrawerModel.view(index))

@@ -1,6 +1,6 @@
 import sys
 
-from src.Views.MainWindow import MainWindow
+from src.MainWindow import MainWindow
 
 from PyQt5.QtWidgets import QApplication
 

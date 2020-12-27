@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout, QListView, QAbstractItemView, QLabel
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 
 class MenuDrawer(QWidget):
+    index_selected = pyqtSignal(int)
+
     def __init__(self, model):
         super().__init__()
         self.__setup_general_style()
@@ -28,4 +30,8 @@ class MenuDrawer(QWidget):
         list_view = QListView()
         list_view.setModel(model)
         list_view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        list_view.clicked.connect(self.__list_view_item_selected)
         layout.addWidget(list_view)
+
+    def __list_view_item_selected(self, index):
+        self.index_selected.emit(index.row())
