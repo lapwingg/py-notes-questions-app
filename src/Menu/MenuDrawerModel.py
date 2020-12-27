@@ -1,9 +1,9 @@
 from PyQt5.QtCore import QStringListModel
-from src.Presentation.NotesView import NotesView
-from src.Presentation.TechnologiesView import TechnologiesView
-from src.Presentation.QuestionsView import QuestionsView
-from src.Presentation.QuizzesView import QuizzesView
-from src.Presentation.InfoView import InfoView
+from src.Presentation.Notes.NotesView import NotesView
+from src.Presentation.Technologies.TechnologiesView import TechnologiesView
+from src.Presentation.Questions.QuestionsView import QuestionsView
+from src.Presentation.Quizzes.QuizzesView import QuizzesView
+from src.Presentation.Info.InfoView import InfoView
 
 
 class MenuDrawerModel:
