@@ -4,9 +4,6 @@ from src.MainWindow import MainWindow
 
 from PyQt5.QtWidgets import QApplication
 
-__version__ = '0.1'
-__author__ = 'lapwingg'
-
 
 def main():
     py_app = QApplication([])
