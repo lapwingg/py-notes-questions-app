@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QShowEvent
+
+from src.Database.Database import Database
 
 
 class TechnologyDetailsView(QWidget):
-    def __init__(self):
+    def __init__(self, technology=None):
         super().__init__()
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setStyleSheet("background-color: pink;")
@@ -12,6 +15,11 @@ class TechnologyDetailsView(QWidget):
         self.button.clicked.connect(self.__on_button_clicked_event)
         self.layout.addWidget(self.button)
         self.setLayout(self.layout)
+        database = Database()
+        technologies = database.get_technologies()
+        number = len(technologies)
+        database.insert_technology(f"Tech_{number}")
 
     def __on_button_clicked_event(self):
         self.hide()
+        self.parent().showEvent(QShowEvent.Show)
