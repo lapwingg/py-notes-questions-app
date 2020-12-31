@@ -1,31 +1,23 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QPlainTextEdit, QMessageBox
-from PyQt5.QtCore import Qt
-
 from src.Presentation.Quiz.QuizViewModel import QuizViewModel
+from src.Presentation.QPresentationWidget import QPresentationWidget
 
 
-class QuizView(QWidget):
+class QuizView(QPresentationWidget):
     def __init__(self):
         super().__init__()
         self.view_model = QuizViewModel()
-        self.setAttribute(Qt.WA_StyledBackground, True)
-        self.setStyleSheet("background-color: rgba(0, 41, 59, 255)")
-        self.layout = QVBoxLayout()
         self.__setup_top_bar_buttons()
         self.__setup_show_question_layout()
         self.__connect_with_view_model()
-        self.setLayout(self.layout)
+        self.set_layout()
 
     def __setup_top_bar_buttons(self):
-        top_bar_layout = QHBoxLayout()
-        self.result_label = QLabel('')
-        self.__setup_attribute(self.result_label)
-        self.start_show_answer_button = self.__setup_button('Start')
-        self.start_show_answer_button.clicked.connect(self.__on_start_show_answer_clicked)
-        self.incorrect_answer_button = self.__setup_button('NO')
-        self.incorrect_answer_button.clicked.connect(self.__on_incorrect_answer_button_clicked)
-        self.correct_answer_button = self.__setup_button('YES')
-        self.correct_answer_button.clicked.connect(self.__on_correct_answer_button_clicked)
+        top_bar_layout = self.produce_horizontal_layout()
+        self.result_label = self.produce_label('')
+        self.setup_background_color_for_widget(self.result_label)
+        self.start_show_answer_button = self.produce_button('Start', on_clicked=self.__on_start_show_answer_clicked)
+        self.incorrect_answer_button = self.produce_button('NO', on_clicked=self.__on_incorrect_answer_button_clicked, enabled=False)
+        self.correct_answer_button = self.produce_button('YES', on_clicked=self.__on_correct_answer_button_clicked, enabled=False)
         top_bar_layout.addWidget(self.result_label)
         top_bar_layout.addWidget(self.start_show_answer_button)
         top_bar_layout.addWidget(self.incorrect_answer_button)
@@ -85,27 +77,13 @@ class QuizView(QWidget):
         self.__on_showing_answer(answer)
 
     def __show_popup(self):
-        alert = QMessageBox()
-        alert.setText(f"Quiz finished with result {self.result_label.text()}")
-        alert.exec_()
-
-    def __setup_button(self, text):
-        button = QPushButton(text)
-        button.setFixedWidth(60)
-        button.setAttribute(Qt.WA_StyledBackground, True)
-        button.setStyleSheet("background-color: white")
-        return button
+        self.show_popup_with_text(f"Quiz finished with result {self.result_label.text()}")
 
     def __setup_show_question_layout(self):
-        show_question_layout = QVBoxLayout()
-        self.question_name = QLineEdit("")
-        self.__setup_attribute(self.question_name)
+        show_question_layout = self.produce_vertical_layout()
+        self.question_name = self.produce_line_edit("")
         show_question_layout.addWidget(self.question_name)
-        self.answer_name = QPlainTextEdit()
-        self.__setup_attribute(self.answer_name)
+        self.answer_name = self.produce_plain_text_edit("")
+        self.setup_background_color_for_widget(self.answer_name)
         show_question_layout.addWidget(self.answer_name)
         self.layout.addLayout(show_question_layout)
-
-    def __setup_attribute(self, widget):
-        widget.setAttribute(Qt.WA_StyledBackground, True)
-        widget.setStyleSheet("background-color: white;")

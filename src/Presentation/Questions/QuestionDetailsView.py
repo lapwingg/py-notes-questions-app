@@ -1,11 +1,10 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QLineEdit, QPlainTextEdit
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QShowEvent
 
 from src.Database.Database import Database
+from src.Presentation.QPresentationWidget import QPresentationWidget
 
 
-class QuestionDetailsView(QWidget):
+class QuestionDetailsView(QPresentationWidget):
     question_name = ""
     question_answer = ""
     question = None
@@ -17,22 +16,16 @@ class QuestionDetailsView(QWidget):
             self.question_name = self.question.question
             self.question_answer = self.question.answer
 
-        self.setAttribute(Qt.WA_StyledBackground, True)
-        self.setStyleSheet("background-color: rgba(0, 41, 59, 255)")
-        self.layout = QVBoxLayout()
         self.__setup_top_bar_buttons()
         self.__setup_edit_question_layout()
-        self.setLayout(self.layout)
+        self.set_layout()
 
     def __setup_top_bar_buttons(self):
-        top_bar_layout = QHBoxLayout()
-        widget = QWidget()
-        show_answer_button = self.__setup_button('Answer')
-        show_answer_button.clicked.connect(self.__on_show_answer_clicked)
-        back_button = self.__setup_button('Back')
-        back_button.clicked.connect(self.__on_back_button_clicked)
-        self.save_button = self.__setup_button('Save')
-        self.save_button.clicked.connect(self.__on_save_button_clicked)
+        top_bar_layout = self.produce_horizontal_layout()
+        widget = self.produce_widget()
+        show_answer_button = self.produce_button('Answer', on_clicked=self.__on_show_answer_clicked)
+        back_button = self.produce_button('Back', on_clicked=self.__on_back_button_clicked)
+        self.save_button = self.produce_button('Save', on_clicked=self.__on_save_button_clicked)
         top_bar_layout.addWidget(widget)
         top_bar_layout.addWidget(show_answer_button)
         top_bar_layout.addWidget(back_button)
@@ -65,31 +58,17 @@ class QuestionDetailsView(QWidget):
         self.__on_back_button_clicked()
 
     def __show_popup(self):
-        alert = QMessageBox()
-        alert.setText("Question saved!")
-        alert.exec_()
-
-    def __setup_button(self, text):
-        button = QPushButton(text)
-        button.setFixedWidth(60)
-        button.setAttribute(Qt.WA_StyledBackground, True)
-        button.setStyleSheet("background-color: white")
-        return button
+        self.show_popup_with_text("Question saved!")
 
     def __setup_edit_question_layout(self):
-        edit_question_layout = QVBoxLayout()
-        self.edit_name = QLineEdit(self.question_name)
-        self.__setup_attribute(self.edit_name)
+        edit_question_layout = self.produce_vertical_layout()
+        self.edit_name = self.produce_line_edit(self.question_name)
         edit_question_layout.addWidget(self.edit_name)
-        self.edit_answer = QPlainTextEdit()
+        self.edit_answer = self.produce_plain_text_edit('')
         if self.question:
             self.edit_answer.setEnabled(False)
         else:
             self.edit_answer.setEnabled(True)
-        self.__setup_attribute(self.edit_answer)
+        self.setup_background_color_for_widget(self.edit_answer)
         edit_question_layout.addWidget(self.edit_answer)
         self.layout.addLayout(edit_question_layout)
-
-    def __setup_attribute(self, widget):
-        widget.setAttribute(Qt.WA_StyledBackground, True)
-        widget.setStyleSheet("background-color: white;")
