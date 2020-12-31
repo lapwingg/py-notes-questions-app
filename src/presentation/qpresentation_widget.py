@@ -1,13 +1,22 @@
 """qpresentation_widget.py"""
 from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QHBoxLayout, \
-    QVBoxLayout, QLineEdit, QPlainTextEdit
-from PyQt5.QtCore import Qt
+    QVBoxLayout, QLineEdit, QPlainTextEdit, QListView, QAbstractItemView
+from PyQt5.QtCore import Qt, QStringListModel
+from PyQt5.QtGui import QShowEvent
+
+from src.database.database import Database
 
 
 class QPresentationWidget(QWidget):
     """Class which defines an application style, provides custom widgets for presentation area"""
     SmallButton = 0
     LargeButton = 1
+
+    Notes = 2
+    Questions = 3
+    Technologies = 4
+
+    show_event_method = None
 
     def __init__(self):
         super().__init__()
@@ -56,12 +65,10 @@ class QPresentationWidget(QWidget):
         label.setContentsMargins(16, 0, 0, 0)
         return label
 
-    def produce_widget(self, background=False):
-        """Produces widget with application background style or not"""
+    @staticmethod
+    def produce_widget():
+        """Produces widget"""
         widget = QWidget()
-
-        if background:
-            self.setup_background_color_for_widget(widget)
 
         return widget
 
@@ -86,3 +93,39 @@ class QPresentationWidget(QWidget):
         plain_text = QPlainTextEdit(plain_text)
         self.setup_background_color_for_widget(plain_text)
         return plain_text
+
+    def method_for_show_event(self, method):
+        """Set method used by show event method"""
+        self.show_event_method = method
+
+    def showEvent(self, a0: QShowEvent) -> None:
+        """Custom implementation of showEvent function"""
+        if a0 == QShowEvent.Show:
+            self.layout.removeWidget(self.list_view)
+            self.show_event_method()
+            self.setLayout(self.layout)
+
+    def produce_list_view(self, data_type, on_clicked):
+        """Produce list view depends of type"""
+        list_view = QListView()
+        database = Database()
+        if data_type == self.Notes:
+            notes = database.get_notes()
+            list_view.setModel(QStringListModel(
+                [note.name for note in notes]
+            ))
+        elif data_type == self.Questions:
+            questions = database.get_questions()
+            list_view.setModel(QStringListModel(
+                [question.question for question in questions]
+            ))
+        elif data_type == self.Technologies:
+            technologies = database.get_technologies()
+            list_view.setModel(QStringListModel(
+                [technology.name for technology in technologies]
+            ))
+
+        self.setup_background_color_for_widget(list_view)
+        list_view.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        list_view.clicked.connect(on_clicked)
+        return list_view

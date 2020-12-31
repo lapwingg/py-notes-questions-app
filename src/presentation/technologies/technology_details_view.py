@@ -3,6 +3,7 @@ from PyQt5.QtGui import QShowEvent
 
 from src.database.database import Database
 from src.presentation.qpresentation_widget import QPresentationWidget
+from src.presentation.top_bar_producer import TopBarProducer
 
 
 class TechnologyDetailsView(QPresentationWidget):
@@ -21,20 +22,11 @@ class TechnologyDetailsView(QPresentationWidget):
         self.set_layout()
 
     def __setup_top_bar_buttons(self):
-        top_bar_layout = self.produce_horizontal_layout()
-        widget = self.produce_widget()
-        widget2 = self.produce_widget()
         back_button = self.produce_button('Back', on_clicked=self.__on_back_button_clicked)
         save_button = self.produce_button('Save', on_clicked=self.__on_save_button_clicked)
-        top_bar_layout.addWidget(widget)
-        top_bar_layout.addWidget(widget2)
-        top_bar_layout.addWidget(back_button)
-        top_bar_layout.addWidget(save_button)
+        top_bar_layout = TopBarProducer.produce_top_bar([back_button,
+                                                         save_button])
         self.layout.addLayout(top_bar_layout)
-
-    def __on_back_button_clicked(self):
-        self.hide()
-        self.parent().showEvent(QShowEvent.Show)
 
     def __on_save_button_clicked(self):
         database = Database()
@@ -45,6 +37,10 @@ class TechnologyDetailsView(QPresentationWidget):
 
         self.__show_popup()
         self.__on_back_button_clicked()
+
+    def __on_back_button_clicked(self):
+        self.hide()
+        self.parent().showEvent(QShowEvent.Show)
 
     def __show_popup(self):
         self.show_popup_with_text("Technology saved!")

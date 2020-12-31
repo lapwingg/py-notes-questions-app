@@ -1,11 +1,10 @@
 """questions_view.py"""
-from PyQt5.QtWidgets import QListView, QAbstractItemView
-from PyQt5.QtCore import QStringListModel
 from PyQt5.QtGui import QShowEvent
 
 from src.presentation.questions.question_details_view import QuestionDetailsView
 from src.presentation.qpresentation_widget import QPresentationWidget
 from src.database.database import Database
+from src.presentation.top_bar_producer import TopBarProducer
 
 
 class QuestionsView(QPresentationWidget):
@@ -15,13 +14,12 @@ class QuestionsView(QPresentationWidget):
 
     def __init__(self):
         super().__init__()
+        self.method_for_show_event(self.__setup_question_list_view)
         self.__setup_top_bar()
         self.__setup_question_list_view()
         self.set_layout()
 
     def __setup_top_bar(self):
-        top_bar = self.produce_horizontal_layout()
-        separator = self.produce_widget()
         self.edit_question_button = self.produce_button('Edit',
                                                         on_clicked=self.__on_edit_button_c,
                                                         enabled=False)
@@ -34,11 +32,10 @@ class QuestionsView(QPresentationWidget):
         filter_question_button = self.produce_button('Filter',
                                                           on_clicked=self.__show_popup,
                                                           enabled=True)
-        top_bar.addWidget(separator)
-        top_bar.addWidget(self.edit_question_button)
-        top_bar.addWidget(self.remove_question_button)
-        top_bar.addWidget(self.new_question_button)
-        top_bar.addWidget(filter_question_button)
+        top_bar = TopBarProducer.produce_top_bar([self.edit_question_button,
+                                                  self.remove_question_button,
+                                                  self.new_question_button,
+                                                  filter_question_button])
         self.layout.addLayout(top_bar)
 
     def __on_edit_button_c(self):
@@ -66,15 +63,10 @@ class QuestionsView(QPresentationWidget):
         question_details.show()
 
     def __setup_question_list_view(self):
-        self.list_view = QListView()
+        self.list_view = self.produce_list_view(data_type=self.Questions,
+                                                on_clicked=self.__list_view_item_selected)
         self.database = Database()
         self.questions = self.database.get_questions()
-        self.list_view.setModel(QStringListModel(
-            [question.question for question in self.questions]
-        ))
-        self.setup_background_color_for_widget(self.list_view)
-        self.list_view.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.list_view.clicked.connect(self.__list_view_item_selected)
         self.layout.addWidget(self.list_view)
 
     def __list_view_item_selected(self, index):
@@ -84,10 +76,3 @@ class QuestionsView(QPresentationWidget):
 
     def __show_popup(self):
         self.show_popup_with_text("One day, you will be able to filter data!")
-
-    def showEvent(self, a0: QShowEvent) -> None:
-        """Custom implementation of showEvent function"""
-        if a0 == QShowEvent.Show:
-            self.layout.removeWidget(self.list_view)
-            self.__setup_question_list_view()
-            self.setLayout(self.layout)

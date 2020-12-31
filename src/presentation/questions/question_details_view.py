@@ -3,6 +3,7 @@ from PyQt5.QtGui import QShowEvent
 
 from src.database.database import Database
 from src.presentation.qpresentation_widget import QPresentationWidget
+from src.presentation.top_bar_producer import TopBarProducer
 
 
 class QuestionDetailsView(QPresentationWidget):
@@ -23,15 +24,12 @@ class QuestionDetailsView(QPresentationWidget):
         self.set_layout()
 
     def __setup_top_bar_buttons(self):
-        top_bar_layout = self.produce_horizontal_layout()
-        widget = self.produce_widget()
         show_answer_button = self.produce_button('Answer', on_clicked=self.__on_show_answer_clicked)
         back_button = self.produce_button('Back', on_clicked=self.__on_back_button_clicked)
         self.save_button = self.produce_button('Save', on_clicked=self.__on_save_button_clicked)
-        top_bar_layout.addWidget(widget)
-        top_bar_layout.addWidget(show_answer_button)
-        top_bar_layout.addWidget(back_button)
-        top_bar_layout.addWidget(self.save_button)
+        top_bar_layout = TopBarProducer.produce_top_bar([show_answer_button,
+                                                         back_button,
+                                                         self.save_button])
 
         if self.question:
             self.save_button.setEnabled(False)
@@ -40,14 +38,14 @@ class QuestionDetailsView(QPresentationWidget):
 
         self.layout.addLayout(top_bar_layout)
 
+    def __on_back_button_clicked(self):
+        self.hide()
+        self.parent().showEvent(QShowEvent.Show)
+
     def __on_show_answer_clicked(self):
         self.save_button.setEnabled(True)
         self.edit_answer.setEnabled(True)
         self.edit_answer.setPlainText(self.question_answer)
-
-    def __on_back_button_clicked(self):
-        self.hide()
-        self.parent().showEvent(QShowEvent.Show)
 
     def __on_save_button_clicked(self):
         database = Database()

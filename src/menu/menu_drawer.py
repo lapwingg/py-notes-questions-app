@@ -24,7 +24,8 @@ class MenuDrawer(QWidget):
         self.__setup_list_view_header(box)
         self.__setup_list_view_content(box, model)
 
-    def __setup_list_view_header(self, layout):
+    @classmethod
+    def __setup_list_view_header(cls, layout):
         label = QLabel(text="Options")
         layout.addWidget(label)
 
