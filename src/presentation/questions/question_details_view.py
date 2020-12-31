@@ -1,10 +1,12 @@
+"""question_details_view.py"""
 from PyQt5.QtGui import QShowEvent
 
-from src.Database.Database import Database
-from src.Presentation.QPresentationWidget import QPresentationWidget
+from src.database.database import Database
+from src.presentation.qpresentation_widget import QPresentationWidget
 
 
 class QuestionDetailsView(QPresentationWidget):
+    """View representing a question"""
     question_name = ""
     question_answer = ""
     question = None
@@ -50,9 +52,12 @@ class QuestionDetailsView(QPresentationWidget):
     def __on_save_button_clicked(self):
         database = Database()
         if self.question:
-            database.update_question(self.question, self.edit_name.text(), self.edit_answer.toPlainText())
+            database.update_question(self.question,
+                                     self.edit_name.text(),
+                                     self.edit_answer.toPlainText())
         else:
-            database.insert_question(self.edit_name.text(), self.edit_answer.toPlainText())
+            database.insert_question(self.edit_name.text(),
+                                     self.edit_answer.toPlainText())
 
         self.__show_popup()
         self.__on_back_button_clicked()
@@ -69,6 +74,5 @@ class QuestionDetailsView(QPresentationWidget):
             self.edit_answer.setEnabled(False)
         else:
             self.edit_answer.setEnabled(True)
-        self.setup_background_color_for_widget(self.edit_answer)
         edit_question_layout.addWidget(self.edit_answer)
         self.layout.addLayout(edit_question_layout)

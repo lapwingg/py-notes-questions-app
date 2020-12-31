@@ -1,6 +1,6 @@
 import unittest
 import os
-from src.Database.Database import Database
+from src.database.database import Database
 
 
 class DatabaseTest(unittest.TestCase):
@@ -19,7 +19,7 @@ class DatabaseTest(unittest.TestCase):
         sut.insert_note("A", "BBBB")
         notes = sut.get_notes()
         self.assertEqual(len(notes), 1)
-        self.assertEqual(notes[0].id, 1)
+        self.assertEqual(notes[0].id_value, 1)
         self.assertEqual(notes[0].name, "A")
         self.assertEqual(notes[0].description, "BBBB")
 
@@ -27,14 +27,14 @@ class DatabaseTest(unittest.TestCase):
         sut.insert_technology("B")
         technologies = sut.get_technologies()
         self.assertEqual(len(technologies), 1)
-        self.assertEqual(technologies[0].id, 1)
+        self.assertEqual(technologies[0].id_value, 1)
         self.assertEqual(technologies[0].name, "B")
 
         # insert one question
         sut.insert_question("A?", "B")
         questions = sut.get_questions()
         self.assertEqual(len(questions), 1)
-        self.assertEqual(questions[0].id, 1)
+        self.assertEqual(questions[0].id_value, 1)
         self.assertEqual(questions[0].question, "A?")
         self.assertEqual(questions[0].answer, "B")
 
@@ -44,7 +44,7 @@ class DatabaseTest(unittest.TestCase):
         notes = sut.get_notes()
         self.assertEqual(len(notes), 6)
         for i in range(1, 6):
-            self.assertEqual(notes[i].id, i+1)
+            self.assertEqual(notes[i].id_value, i + 1)
             self.assertEqual(notes[i].name, f"A_{i-1}")
             self.assertEqual(notes[i].description, f"B_{i-1}")
 
@@ -54,7 +54,7 @@ class DatabaseTest(unittest.TestCase):
         technologies = sut.get_technologies()
         self.assertEqual(len(technologies), 6)
         for i in range(1, 6):
-            self.assertEqual(technologies[i].id, i+1)
+            self.assertEqual(technologies[i].id_value, i + 1)
             self.assertEqual(technologies[i].name, f"A_{i-1}")
 
         # insert some questions
@@ -63,7 +63,7 @@ class DatabaseTest(unittest.TestCase):
         questions = sut.get_questions()
         self.assertEqual(len(questions), 6)
         for i in range(1, 6):
-            self.assertEqual(questions[i].id, i+1)
+            self.assertEqual(questions[i].id_value, i + 1)
             self.assertEqual(questions[i].question, f"A_{i-1}")
             self.assertEqual(questions[i].answer, f"B_{i-1}")
 
@@ -73,7 +73,7 @@ class DatabaseTest(unittest.TestCase):
         notes = sut.get_notes()
         self.assertEqual(len(notes), 5)
         for i in range(0, 5):
-            self.assertEqual(notes[i].id, i+2)
+            self.assertEqual(notes[i].id_value, i + 2)
             self.assertEqual(notes[i].name, f"A_{i}")
             self.assertEqual(notes[i].description, f"B_{i}")
 
@@ -83,7 +83,7 @@ class DatabaseTest(unittest.TestCase):
         technologies = sut.get_technologies()
         self.assertEqual(len(technologies), 5)
         for i in range(0, 5):
-            self.assertEqual(technologies[i].id, i+2)
+            self.assertEqual(technologies[i].id_value, i + 2)
             self.assertEqual(technologies[i].name, f"A_{i}")
 
         # delete one question
@@ -92,14 +92,14 @@ class DatabaseTest(unittest.TestCase):
         questions = sut.get_questions()
         self.assertEqual(len(questions), 5)
         for i in range(0, 5):
-            self.assertEqual(questions[i].id, i+2)
+            self.assertEqual(questions[i].id_value, i + 2)
             self.assertEqual(questions[i].question, f"A_{i}")
             self.assertEqual(questions[i].answer, f"B_{i}")
 
         # update one note
         note_to_update = notes[4]
         sut.update_note(note_to_update, "C", "D")
-        self.assertEqual(note_to_update.id, 6)
+        self.assertEqual(note_to_update.id_value, 6)
         self.assertEqual(note_to_update.name, "C")
         self.assertEqual(note_to_update.description, "D")
         notes = sut.get_notes()
@@ -108,7 +108,7 @@ class DatabaseTest(unittest.TestCase):
         # update one technology
         technology_to_update = technologies[4]
         sut.update_technology(technology_to_update, "E")
-        self.assertEqual(technology_to_update.id, 6)
+        self.assertEqual(technology_to_update.id_value, 6)
         self.assertEqual(technology_to_update.name, "E")
         technologies = sut.get_technologies()
         self.assertEqual(len(technologies), 5)
@@ -116,7 +116,7 @@ class DatabaseTest(unittest.TestCase):
         # update one question
         question_to_update = questions[4]
         sut.update_question(question_to_update, "F", "G")
-        self.assertEqual(question_to_update.id, 6)
+        self.assertEqual(question_to_update.id_value, 6)
         self.assertEqual(question_to_update.question, "F")
         self.assertEqual(question_to_update.answer, "G")
         questions = sut.get_questions()

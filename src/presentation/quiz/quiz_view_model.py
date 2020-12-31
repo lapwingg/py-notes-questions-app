@@ -1,9 +1,11 @@
+"""quiz_view_model.py"""
 from PyQt5.QtCore import pyqtSignal, QObject
 
-from src.Database.Database import Database
+from src.database.database import Database
 
 
 class QuizViewModel(QObject):
+    """View model supports Quiz view"""
     __questions = []
     __current_question_index = -1
     __correct_answers = 0
@@ -20,11 +22,13 @@ class QuizViewModel(QObject):
             self.__database_name = database_name
 
     def on_start(self):
+        """Actions to do on start quiz"""
         self.__clear()
         self.__emit_current_result()
         self.next_question()
 
     def next_question(self):
+        """Returns next question"""
         self.__current_question_index += 1
         if self.__current_question_index < len(self.__questions):
             self.__questions_given += 1
@@ -33,12 +37,15 @@ class QuizViewModel(QObject):
             self.question.emit("")
 
     def answer_for_question(self):
+        """Returns answer to question"""
         self.answer.emit(self.__questions[self.__current_question_index].answer)
 
     def was_incorrect_answer(self):
+        """Answer was checked as incorrect"""
         self.__emit_current_result()
 
     def was_correct_answer(self):
+        """Answer was checked as correct"""
         self.__correct_answers += 1
         self.__emit_current_result()
 

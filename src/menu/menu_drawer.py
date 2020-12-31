@@ -1,8 +1,10 @@
+"""menu_drawer.py"""
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout, QListView, QAbstractItemView, QLabel
 from PyQt5.QtCore import Qt, pyqtSignal
 
 
 class MenuDrawer(QWidget):
+    """Class representing a menu view in the app"""
     index_selected = pyqtSignal(int)
 
     def __init__(self, model):

@@ -1,7 +1,12 @@
+"""presentation_area.py"""
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout
 
 
 class PresentationArea(QWidget):
+    """View representing an area when are showed selected option, root for this action"""
+
+    current_widget = None
+
     def __init__(self, widget=None):
         super().__init__()
         self.__setup_size_policy()
@@ -25,6 +30,7 @@ class PresentationArea(QWidget):
             self.current_widget = None
 
     def change_widget(self, new_widget):
+        """Changes current presented widget in the presentation area"""
         if self.current_widget:
             self.layout.replaceWidget(self.current_widget, new_widget)
         else:

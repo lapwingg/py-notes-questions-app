@@ -1,9 +1,13 @@
+"""question.py"""
+
+
 class Question:
-    id = 0
+    """Object representing a question"""
+    id_value = 0
     question = "Question"
     answer = "Answer"
 
     def __init__(self, data):
-        self.id = data[0]
+        self.id_value = data[0]
         self.question = data[1]
         self.answer = data[2]

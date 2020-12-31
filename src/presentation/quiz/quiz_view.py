@@ -1,8 +1,10 @@
-from src.Presentation.Quiz.QuizViewModel import QuizViewModel
-from src.Presentation.QPresentationWidget import QPresentationWidget
+"""quiz.py"""
+from src.presentation.quiz.quiz_view_model import QuizViewModel
+from src.presentation.qpresentation_widget import QPresentationWidget
 
 
 class QuizView(QPresentationWidget):
+    """View representing a quiz"""
     def __init__(self):
         super().__init__()
         self.view_model = QuizViewModel()
@@ -14,17 +16,21 @@ class QuizView(QPresentationWidget):
     def __setup_top_bar_buttons(self):
         top_bar_layout = self.produce_horizontal_layout()
         self.result_label = self.produce_label('')
-        self.setup_background_color_for_widget(self.result_label)
-        self.start_show_answer_button = self.produce_button('Start', on_clicked=self.__on_start_show_answer_clicked)
-        self.incorrect_answer_button = self.produce_button('NO', on_clicked=self.__on_incorrect_answer_button_clicked, enabled=False)
-        self.correct_answer_button = self.produce_button('YES', on_clicked=self.__on_correct_answer_button_clicked, enabled=False)
+        self.start_show_answer_button = self.produce_button('Start',
+                                                            on_clicked=self.__on_startshow_answer_c)
+        self.incorrect_answer_button = self.produce_button('NO',
+                                                           on_clicked=self.__on_incorrect_answer_c,
+                                                           enabled=False)
+        self.correct_answer_button = self.produce_button('YES',
+                                                         on_clicked=self.__on_correct_answer_c,
+                                                         enabled=False)
         top_bar_layout.addWidget(self.result_label)
         top_bar_layout.addWidget(self.start_show_answer_button)
         top_bar_layout.addWidget(self.incorrect_answer_button)
         top_bar_layout.addWidget(self.correct_answer_button)
         self.layout.addLayout(top_bar_layout)
 
-    def __on_start_show_answer_clicked(self):
+    def __on_startshow_answer_c(self):
         if self.start_show_answer_button.text() == 'Start':
             self.__on_start_quiz()
         else:
@@ -34,11 +40,11 @@ class QuizView(QPresentationWidget):
         self.start_show_answer_button.setText('Answer')
         self.view_model.on_start()
 
-    def __on_incorrect_answer_button_clicked(self):
+    def __on_incorrect_answer_c(self):
         self.view_model.was_incorrect_answer()
         self.view_model.next_question()
 
-    def __on_correct_answer_button_clicked(self):
+    def __on_correct_answer_c(self):
         self.view_model.was_correct_answer()
         self.view_model.next_question()
 
@@ -84,6 +90,5 @@ class QuizView(QPresentationWidget):
         self.question_name = self.produce_line_edit("")
         show_question_layout.addWidget(self.question_name)
         self.answer_name = self.produce_plain_text_edit("")
-        self.setup_background_color_for_widget(self.answer_name)
         show_question_layout.addWidget(self.answer_name)
         self.layout.addLayout(show_question_layout)

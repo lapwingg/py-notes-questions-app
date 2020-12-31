@@ -1,23 +1,23 @@
+"""technologies_details_view.py"""
 from PyQt5.QtGui import QShowEvent
 
-from src.Database.Database import Database
-from src.Presentation.QPresentationWidget import QPresentationWidget
+from src.database.database import Database
+from src.presentation.qpresentation_widget import QPresentationWidget
 
 
-class NoteDetailsView(QPresentationWidget):
+class TechnologyDetailsView(QPresentationWidget):
+    """View representing a technology view"""
     name = ""
-    description = ""
-    note = None
+    technology = None
 
-    def __init__(self, note=None):
+    def __init__(self, technology=None):
         super().__init__()
-        if note:
-            self.note = note
-            self.name = self.note.name
-            self.description = self.note.description
+        if technology:
+            self.technology = technology
+            self.name = self.technology.name
 
         self.__setup_top_bar_buttons()
-        self.__setup_edit_note_layout()
+        self.__setup_edit_technology_layout()
         self.set_layout()
 
     def __setup_top_bar_buttons(self):
@@ -38,21 +38,21 @@ class NoteDetailsView(QPresentationWidget):
 
     def __on_save_button_clicked(self):
         database = Database()
-        if self.note:
-            database.update_note(self.note, self.edit_name.text(), self.edit_description.toPlainText())
+        if self.technology:
+            database.update_technology(self.technology, self.edit_name.text())
         else:
-            database.insert_note(self.edit_name.text(), self.edit_description.toPlainText())
+            database.insert_technology(self.edit_name.text())
 
         self.__show_popup()
         self.__on_back_button_clicked()
 
     def __show_popup(self):
-        self.show_popup_with_text("Note saved!")
+        self.show_popup_with_text("Technology saved!")
 
-    def __setup_edit_note_layout(self):
-        edit_note_layout = self.produce_vertical_layout()
+    def __setup_edit_technology_layout(self):
+        edit_technology_layout = self.produce_vertical_layout()
         self.edit_name = self.produce_line_edit(self.name)
-        self.edit_description = self.produce_plain_text_edit(self.description)
-        edit_note_layout.addWidget(self.edit_name)
-        edit_note_layout.addWidget(self.edit_description)
-        self.layout.addLayout(edit_note_layout)
+        edit_technology_layout.addWidget(self.edit_name)
+        widget = self.produce_widget()
+        edit_technology_layout.addWidget(widget)
+        self.layout.addLayout(edit_technology_layout)

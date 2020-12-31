@@ -1,13 +1,18 @@
+"""note_view.py"""
 from PyQt5.QtWidgets import QListView, QAbstractItemView
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtGui import QShowEvent
 
-from src.Presentation.Notes.NoteDetailsView import NoteDetailsView
-from src.Presentation.QPresentationWidget import QPresentationWidget
-from src.Database.Database import Database
+from src.presentation.notes.note_details_view import NoteDetailsView
+from src.presentation.qpresentation_widget import QPresentationWidget
+from src.database.database import Database
 
 
 class NotesView(QPresentationWidget):
+    """View representing Notes"""
+
+    selected_index = -1
+
     def __init__(self):
         super().__init__()
         self.__setup_top_bar()
@@ -17,15 +22,23 @@ class NotesView(QPresentationWidget):
     def __setup_top_bar(self):
         top_bar = self.produce_horizontal_layout()
         separator = self.produce_widget()
-        self.edit_note_button = self.produce_button('Edit', on_clicked=self.__on_edit_button_clicked, enabled=False)
-        self.remove_note_button = self.produce_button('Remove', on_clicked=self.__on_remove_button_clicked, enabled=False)
-        self.new_note_button = self.produce_button('New', on_clicked=self.__on_new_note_button_clicked, enabled=True)
-        self.filter_note_button = self.produce_button('Filter', on_clicked=self.__show_popup, enabled=True)
+        self.edit_note_button = self.produce_button('Edit',
+                                                    on_clicked=self.__on_edit_button_clicked,
+                                                    enabled=False)
+        self.remove_note_button = self.produce_button('Remove',
+                                                      on_clicked=self.__on_remove_button_clicked,
+                                                      enabled=False)
+        self.new_note_button = self.produce_button('New',
+                                                   on_clicked=self.__on_new_note_button_clicked,
+                                                   enabled=True)
+        filter_note_button = self.produce_button('Filter',
+                                                 on_clicked=self.__show_popup,
+                                                 enabled=True)
         top_bar.addWidget(separator)
         top_bar.addWidget(self.edit_note_button)
         top_bar.addWidget(self.remove_note_button)
         top_bar.addWidget(self.new_note_button)
-        top_bar.addWidget(self.filter_note_button)
+        top_bar.addWidget(filter_note_button)
         self.layout.addLayout(top_bar)
 
     def __on_edit_button_clicked(self):
@@ -71,6 +84,7 @@ class NotesView(QPresentationWidget):
         self.show_popup_with_text("One day, you will be able to filter data!")
 
     def showEvent(self, a0: QShowEvent) -> None:
+        """Custom implementation of showEvent function"""
         if a0 == QShowEvent.Show:
             self.layout.removeWidget(self.list_view)
             self.__setup_note_list_view()

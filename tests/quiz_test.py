@@ -1,8 +1,8 @@
 import unittest
 import os
 
-from src.Database.Database import Database
-from src.Presentation.Quiz.QuizViewModel import QuizViewModel
+from src.database.database import Database
+from src.presentation.quiz.quiz_view_model import QuizViewModel
 
 
 class QuizTest(unittest.TestCase):

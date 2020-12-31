@@ -1,8 +1,10 @@
-from src.Presentation.Info.InfoViewModel import InfoViewModel
-from src.Presentation.QPresentationWidget import QPresentationWidget
+"""info_view.py"""
+from src.presentation.info.info_view_model import InfoViewModel
+from src.presentation.qpresentation_widget import QPresentationWidget
 
 
 class InfoView(QPresentationWidget):
+    """View representing Info option in the presentation area"""
     def __init__(self):
         super().__init__()
         self.__setup_top_bar()
@@ -14,7 +16,9 @@ class InfoView(QPresentationWidget):
         top_bar = self.produce_horizontal_layout()
         separator_widget = self.produce_widget()
         top_bar.addWidget(separator_widget)
-        send_opinion_button = self.produce_button("Send Opinion", size=self.LargeButton, on_clicked=self.__show_popup)
+        send_opinion_button = self.produce_button("Send Opinion",
+                                                  size=self.LargeButton,
+                                                  on_clicked=self.__show_popup)
         top_bar.addWidget(send_opinion_button)
         self.layout.addLayout(top_bar)
 
@@ -39,7 +43,9 @@ class InfoView(QPresentationWidget):
         content_info_bar = self.produce_vertical_layout()
         notes_count = self.produce_label(f'Notes: {InfoViewModel.notes_count()}')
         content_info_bar.addWidget(notes_count)
-        technologies_count = self.produce_label(f'Technologies: {InfoViewModel.technologies_count()}')
+        technologies_count = self.produce_label(
+            f'Technologies: {InfoViewModel.technologies_count()}'
+        )
         content_info_bar.addWidget(technologies_count)
         questions_count = self.produce_label(f'Questions: {InfoViewModel.questions_count()}')
         content_info_bar.addWidget(questions_count)
